@@ -1,0 +1,32 @@
+nav {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap; /* for small screens */
+    justify-content: center; /* space-evenly */
+    column-gap: 3rem;
+
+    background-color: rgb(41,42,53);
+    color: white;
+}
+
+.nav-item {
+    border-radius: 0.1rem;
+    padding: 0.4rem;
+
+    /* background-color: rgb(119, 211, 95); */
+
+    cursor: pointer;
+    user-select: none; /* no text selection */
+}
+
+.nav-item:hover {
+    background-color: black;
+}
+
+.nav-item-active {
+    background-color: rgb(119, 211, 95);
+}
+
+.nav-item-active:hover {
+    background-color: rgb(119, 211, 95);
+}

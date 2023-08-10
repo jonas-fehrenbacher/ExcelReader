@@ -1,0 +1,5 @@
+footer {
+    min-height: 10rem; /* min because small screen require more height to fit everything inside. */
+
+    background-color: rgb(41,42,53);
+}

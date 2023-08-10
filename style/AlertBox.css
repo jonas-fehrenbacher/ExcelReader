@@ -1,0 +1,61 @@
+/** 
+ * See: 
+ * https://csshint.com/wp-content/uploads/2020/08/Modern-Alerts.jpg 
+ * https://www.w3schools.com/howto/tryit.asp?filename=tryhow_js_alerts
+ */
+
+#alertBoxes {
+    padding: 0.25rem;
+}
+
+.alertBox {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 0.5rem;
+    border-radius: 0.25rem;
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px; /* h-offset v-offset blur spread color; https://getcssscan.com/css-box-shadow-examples */
+
+    opacity: 1;
+    transition: opacity 2s;
+
+    overflow-wrap: break-word; /* maybe this helps on small screens, dunno. */
+}
+
+.alertBox.success {
+    background-color: rgb(168, 241, 198);
+    border-left: 0.4rem solid rgb(42, 121, 75);
+}
+
+.alertBox.info {
+    background-color: rgb(235, 235, 235);
+    border-left: 0.4rem solid rgb(108, 108, 108);
+}
+
+.alertBox.warning {
+    background-color: rgb(255, 211, 138);
+    border-left: 0.4rem solid rgb(138, 86, 4);
+}
+
+.alertBox.error {
+    background-color: rgb(246, 167, 163);
+    border-left: 0.4rem solid rgb(144, 18, 14);
+}
+
+.alertBox-label {
+    font-weight: bold;
+}
+
+.closeBtn {
+    min-width: 2.5rem;/* for small screens, otherwise button is so far to the left that it is hardly drawn; 2.25rem is good on S7, but bad for iPhone SE */
+
+    fill: gray; /* must be specified here (not in 'path'), so that :hover can change 'fill'. To be able to use 'fill' you need inline svg ('symbol', 'use'), I guess. */
+    transition: 0.4s; /* Time in which color is changed; 'setTimeout' in js needs to have the same value (0.6s => 600ms) */
+    cursor: pointer;
+}
+
+.closeBtn:hover {
+    fill: black;
+}

@@ -1,0 +1,21 @@
+/* freiRaum pictures: https://solingenmagazin.de/wp-content/uploads/Digitalisierungstag-1.jpg; https://xn--fachstelle-ffentliche-bibliotheken-lnd.nrw/wp-content/uploads/2020/10/solingen_freiraum_2.jpg */
+
+header {
+    padding: 0.5rem;
+    background-color: rgb(98, 173, 78); /*  */
+}
+
+#title {
+    display: inline-block;
+    
+    border-radius: 0.5rem;
+    padding: 0.25rem;
+    margin: 0.25rem 0.25rem 0rem 0.25rem;
+
+    font-size: 2rem;
+    background-color: rgb(119, 211, 95); /*  */
+    color: rgb(53, 55, 72); /*  */
+    font-weight: bold;
+
+    text-decoration: none;
+}

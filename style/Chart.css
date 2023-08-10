@@ -1,0 +1,27 @@
+#chartBox {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    /*justify-content: space-around;*/
+    gap: 1rem;
+
+    padding: 1rem;
+}
+
+.plotlyChartWrapper {
+    max-width: 100%; /* this is important for small screens. Otherwise charts do not resize, when window resizes (like in '.plotlyChart'). */
+}
+
+/*.plotlyChartWrapper*/ .plotlyChart {
+    max-width: 100%; /* Otherwise charts do not resize, when window resizes. */
+    border-radius: 4.4rem; /* With 4.4 plotly advertisement icon is fully removed. */
+    overflow: hidden; /* required for border-radius to work! See: https://stackoverflow.com/questions/65659633/javascript-plotly-border-radius-how-to */
+}
+
+.plotlyChartWrapper .plotlyChart.openBottom {
+    border-top-left-radius: 4.4rem;
+    border-top-right-radius: 4.4rem;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}

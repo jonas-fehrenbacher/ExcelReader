@@ -1,0 +1,176 @@
+/**
+ * HTML structure:
+ * <div class="dropdownMenu">
+ *     <span class="dropdownMenu-title">Mein Menü</span>
+ *     <div class="dropdownMenu-content">
+ *         <div class="dropdownMenu-item">Item1</div>
+ *         <div class="dropdownMenu-item">Item2</div>
+ *         <div class="dropdownMenu-item">Item3</div>
+ *     </div>
+ * </div> 
+ *
+ * See: https://codepen.io/jenning/pen/wXQJeP
+ * See also:
+ * - Pop out animation: https://codepen.io/ainalem/pen/VNVaVd
+ * - Get bigger: https://codepen.io/halidaa/pen/qKLYBg; 
+ * - Interesting: https://codepen.io/kkrueger/pen/jOrYaM
+ * - Simple & bad : https://codepen.io/remilaudanski/pen/gbBGyN; https://www.w3schools.com/css/tryit.asp?filename=trycss_dropdown_button
+ */
+
+.dropdownMenu {
+    display: inline-block;
+    position: relative; /* required to show the small dot (see 'dropdownMenu::after') */
+    
+    border-top-left-radius: 0.75rem;
+    border-top-right-radius: 0.75rem;
+    border-bottom-left-radius: 0.75rem;
+    border-bottom-right-radius: 0.75rem;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    padding-top: 0.55rem;
+    padding-bottom: 0.55rem;
+
+    /*line-height: 2.5rem;*/
+    text-align: center;
+    color: whitesmoke;
+    background-color: rgb(49, 49, 49);
+
+    cursor: pointer; /*default*/
+}
+
+.dropdownMenu:hover {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+/** Display small dot on hover: */
+.dropdownMenu::after {
+    content: "";
+
+    position: absolute;
+    bottom: 0.25rem; /* move a bit up */
+    left: calc(50% - 0.125rem); /* x center */
+
+    width: 0.25rem;
+    height: 0.25rem;
+    border-radius: 50%;
+
+    /* Hide dot and set animation: 
+     * See: '.dropdownMenu:hover::after' which shows item on hover.
+     */
+    will-change: transform;
+    transform: scale(0);
+    transition: transform 0.2s ease;
+
+    /*white-space: nowrap;
+    text-overflow: ellipsis;*/
+    background: #FECEAB;
+}
+
+.dropdownMenu:hover::after {
+    transform: scale(1); /* show item which was hidden with 'scale(0)' in '.dropdownMenu::after'. */
+}
+
+.dropdownMenu-title:after {
+    content: "▼";
+    margin-left: 0.5rem;
+
+    pointer-events: none; /* Remove click event - this is required. Otherwise on a mobile phone the button closes right after 
+        opening it (when this icon is pressed). [ On a mobile phone there is no hover, only clicks.] */
+}
+
+.dropdownMenu-content {
+    display: none;
+    position: absolute; /* With that '.dropdownMenu' does not contain this in its size (bg color is not displayed for this). */
+    width: 100%;
+    top: 100%; /* Otherwise item is displayed to far above - now it starts perfectly at the bottom. */
+    left: 0; /* Otherwise items are displayed a bit to the left. */
+
+    z-index: 1; /* Otherwise if dropbox is shown on hover, then it could be bellow another element. */
+}
+.dropdownMenu:hover > .dropdownMenu-content { /* change 'dropdownMenu-content' when 'dropdownMenu' is hovered. */
+    display: block;
+}
+
+.dropdownMenu-item {
+    /* change padding value to modify item size: */
+    padding-left: 0rem;
+    padding-right: 0rem;
+    padding-top: 0.2rem;
+    padding-bottom: 0.2rem;
+
+    opacity: 0;
+    transform-origin: bottom;
+    animation: enter 0.2s ease forwards; /* uses 'enter' keyframe - see bellow. This is the animation, when the tiles appear on hover. */
+
+    background-color: rgb(49, 49, 49);
+}
+.dropdownMenu-item:nth-child(1) {
+    animation-duration: 0.2s;
+    animation-delay: 0s;
+}
+.dropdownMenu-item:nth-child(2) {
+    animation-duration: 0.3s;
+    animation-delay: 0.1s;
+}
+.dropdownMenu-item:nth-child(3) {
+    animation-duration: 0.4s;
+    animation-delay: 0.2s;
+}
+.dropdownMenu-item:nth-child(4) {
+    animation-duration: 0.5s;
+    animation-delay: 0.3s;
+}
+.dropdownMenu-item:nth-child(5) {
+    animation-duration: 0.6s;
+    animation-delay: 0.4s;
+}
+.dropdownMenu-item:nth-child(6) {
+    animation-duration: 0.7s;
+    animation-delay: 0.5s;
+}
+.dropdownMenu-item:nth-child(7) {
+    animation-duration: 0.8s;
+    animation-delay: 0.6s;
+}
+/* ..add more ':nth-child' elements here to support more items. */
+.dropdownMenu-item:hover {
+    background-color: rgb(58, 58, 58);
+}
+.dropdownMenu-item:last-child {
+    border-bottom-left-radius: 0.75rem;
+    border-bottom-right-radius: 0.75rem;
+}
+
+@keyframes enter {
+    from {
+        opacity: 0;
+        transform: scaleY(0.98) translateY(0.625rem);
+    }
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+/* ///////////////////////////////////////////////////////////////////
+Plotly.js support
+/////////////////////////////////////////////////////////////////// */
+
+/** border-radius needs to be the same as 'plotlyChart.openBottom' */
+.dropdownMenuWrapper {
+    background-color: rgb(244, 244, 244);
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    border-bottom-left-radius: 4.4rem;
+    border-bottom-right-radius: 4.4rem;
+
+    width: 100%;
+}
+
+/** Specifies the padding of 'dropdownMenuWrapper'. */
+.dropdownMenu.plotlyButton {
+    margin-left: 3.5rem; /* This margin has to function as padding of 'dropdownMenuWrapper', because setting padding their causes issues for plotly. */
+    margin-bottom: 1rem;
+    margin-right: -3rem; /* Reduce margin to the right dropdown menu. */
+}

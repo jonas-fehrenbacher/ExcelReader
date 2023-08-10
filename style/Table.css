@@ -1,0 +1,129 @@
+/*/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+Table box
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////*/
+
+#tableBox {
+    /* See: https://stackoverflow.com/questions/17808685/table-in-div-with-scrollbar */
+    width: 100%;
+    height: 50vh;
+    overflow: auto; /* Like 'scroll', but detects automatically if a scrollbar is needed. The overflow is clipped, and a scrollbar is added. */
+}
+
+#tableBox-dragbar {
+    background-color: rgb(44, 108, 245);
+    width: 100%;
+    height: 0.25rem;
+    cursor: row-resize;
+}
+
+/*/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+Table
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////*/
+
+table {
+    /*margin-left: auto;*/ /* center table */
+    /*margin-right: auto;*/ /* center table */
+    border-collapse: collapse; /* cells share borders */
+    table-layout: fixed; /* defines the algorithm: top of table is rendered while rest is not calculated yet. */
+
+    width: 100%; height: 100%; /* with that always whole table is displayed, but cell text can overflow. */
+
+    user-select: none; /* no text selection */
+}
+
+/** table title */
+table caption {
+    font-size: 1.5rem;
+    margin-top: 0.75rem;
+    margin-bottom: 0.75rem;
+}
+
+th, td {
+    padding: 0.5rem;
+    border: 0.07rem solid #ccc; /* 0.25rem */
+    text-align: center;
+
+    /* Make table a bit more responsive, when table does not fit completly: */
+    overflow: hidden; /* Hide overflowing text and enables to use 'text-overflow'.  */
+    text-overflow: ellipsis; /* Display '...' on Text overflow. Requires 'overflow: hidden'. */
+    /*white-space: nowrap;*/ /* Disables multiple text lines, but they are needed for header text. */
+}
+
+th {
+    /* Make header stiky:
+     * Sticky header works with 'th' and 'thead'. 
+     * This is somehow ignored on small screens where I display the table different, thus can be left unchanged.
+     */
+    position: sticky; /* Make header sticky. */
+    top: 0px; /* This is required for sticky position to work. Define here where the header should be positioned. */
+
+    padding: 0.625rem;
+    border: none;
+
+    background-color: rgb(71, 71, 71);
+    letter-spacing: 0.095rem;
+    /*text-transform: uppercase;*/
+    color: whitesmoke;
+}
+
+tr:nth-child(even) {
+    background-color: rgb(252, 252, 252);
+}
+
+tr:nth-child(odd) {
+    background-color: rgb(237, 237, 237);
+}
+
+td.table-summaryRow { /* Specify 'td' to have priority over 'tr:nth-child'. */
+    background-color: rgb(53, 243, 139);
+}
+
+
+td.table-dateCell { /* Specify 'td' to have priority over 'tr:nth-child'. */
+    /* Make date cell stiky:
+     * This is somehow ignored on small screens where I display the table different, thus can be left unchanged.
+     */
+    position: sticky;
+    top: 5.9rem;
+
+    background-color: rgb(186, 243, 53); /* If this is on 'tr' or 'td' makes no difference. */
+    text-align: center; /* on small screens display text in the center, not on the right side. */
+}
+
+@media screen and (max-width: 1000px) /* mobile phone: 600px; table can be drawn on 1400px window size; Modify also 'HtmlTable::#addRow()' */
+{
+    /* See: https://codepen.io/AllThingsSmitty/pen/MyqmdM */
+
+    table {
+        width: 100%;
+    }
+
+    thead {
+        /* Hide table header: */
+        height: 0px;
+        overflow: hidden; /* otherwise everything that overflows height would be drawn. */
+        position: absolute; /* height can only be set with an absolute position. */
+    }
+
+    tr {
+        border-bottom: 0.2rem solid #ddd; /* looks like a shadow. Good, because each table row is on android a seperate box. */
+        display: block; /* with this display method a margin can be applied. */
+        margin-bottom: 0.625rem;
+    }
+
+    td {
+        display: block; /* Put each table data in a seperate line. */
+        text-align: right; /* Display table data on the right side, so that header can be displayed on the left side. */
+    }
+
+    td::before {
+        content: attr(data-label);
+        float: left; /* display header text left. */
+
+        font-weight: bold;
+    }
+
+    table td:last-child {
+        border-bottom: 0; /* ignore border of last element. */
+    }
+}

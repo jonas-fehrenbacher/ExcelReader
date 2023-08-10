@@ -1,0 +1,16 @@
+#fileUploadBox {
+    font-size: 1rem;
+    background-color: rgb(196, 206, 206);
+    padding: 1rem;
+}
+
+#fileUploadBox-title {
+    display: block;
+    font-size: 1.25rem;
+    font-weight: bold;
+}
+
+#fileUploadBox-note {
+    display: block;
+    font-size: 0.9rem;
+}

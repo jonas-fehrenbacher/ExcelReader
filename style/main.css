@@ -1,0 +1,56 @@
+@import url("Table.css");
+@import url("Chart.css");
+@import url("Header.css");
+@import url("Navigation.css");
+@import url("Footer.css");
+@import url("FileUploadBox.css");
+@import url("AlertBox.css");
+@import url("ToggleBtnGrp.css");
+@import url("Dropdown.css");
+
+/* reset */
+*,
+*::before,
+*::after {
+    box-sizing: border-box; /* 'width/height + padding + border = actual width/height' is the normal calculation, but 'border-box' changes this so that width/height includes padding and border. */
+    margin: 0;
+    padding: 0;
+    font: inherit; /* remove h1..h6 behaviour and everything inherits the parents font. By default, buttons and inputs 
+        don't inherit typographical styles from their parents, so they use the system-default monospace and 13.333px in Chrome.
+        1rem/16px is the default size. */
+    /*overflow-wrap: break-word;*/ /* If a line doesn't have any soft wrap (in english there is only whitespace and hyphens) 
+        opportunities, and it doesn't fit, it will cause the text to overflow by default, but with 'break-word' it does
+        an hard wrap (break a word) if no soft wrap is possible. */
+}
+
+html {
+    font-size: 100%; /* rem (root em) is relative to this value. */
+}
+
+body {
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+
+hr {
+    border: 0.1rem solid rgb(145, 145, 145);
+    border-radius: 10rem;
+}
+
+#app {
+    display: flex;
+    flex-direction: column;
+
+    min-height: 100vh; /* required to place footer at the bottom. Or place it in html & body. */
+}
+
+#app > main {
+    flex-grow: 1; /* give every free space to the main content, so that <footer> is at the bottom. */
+}
+
+.material-symbols-outlined {
+  font-variation-settings:
+  'FILL' 0,
+  'wght' 400,
+  'GRAD' 0,
+  'opsz' 48
+}

@@ -1,0 +1,60 @@
+<!-- Disable web security: start chrome --disable-web-security -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel='stylesheet' type='text/css' href='style/main.css'>
+    <title>Excel reader</title>
+</head>
+<body>
+    <div id="app">
+        <header>
+            <a id="title" href="javascript:location.reload(true)">Excel Reader</a>
+        </header>
+
+        <nav>
+            <div class="nav-item">Userlisten</div>
+            <div class="nav-item">Bestandsliste</div>
+            <div class="nav-item">Zeiterfassung</div>
+            <div class="nav-item">Getränkeliste</div>
+            <div class="nav-item">Konsolen</div>
+        </nav>
+
+        <main>
+            <div id="fileUploadBox">
+                <!-- filled by js -->
+            </div>
+
+            <div id="alertBoxes">
+                <!-- filled by js -->
+            </div>
+
+            <div id="userlistBox">
+                <div id="tableBox"> <!-- table to display the excel data -->
+                    <table id="excelDataTable"></table>
+                </div>
+                <div id="tableBox-dragbar"></div>
+            </div>
+            
+            <div id="chartBox">
+                <!-- filled by js -->
+            </div>
+        </main>
+
+        <footer>
+            
+        </footer>
+    </div>
+    
+    <!-- inline svg: -->
+    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" display="none">
+        <symbol width="40" height="40" viewBox="0 -960 960 960"  id="close">
+            <path d="M334.667-317.333 480-462.667l145.333 145.334 17.334-17.334L497.333-480l145.334-145.333-17.334-17.334L480-497.333 334.667-642.667l-17.334 17.334L462.667-480 317.333-334.667l17.334 17.334ZM480.174-132Q408-132 344.775-159.391q-63.225-27.392-110.574-74.681-47.349-47.29-74.775-110.435Q132-407.652 132-479.826q0-72.174 27.391-135.732 27.392-63.559 74.681-110.574 47.29-47.016 110.435-74.442Q407.652-828 479.826-828q72.174 0 135.732 27.391 63.559 27.392 110.574 74.348 47.016 46.957 74.442 110.435Q828-552.348 828-480.174q0 72.174-27.391 135.399-27.392 63.225-74.348 110.574-46.957 47.349-110.435 74.775Q552.348-132 480.174-132ZM480-156q135.333 0 229.667-94.333Q804-344.667 804-480t-94.333-229.667Q615.333-804 480-804t-229.667 94.333Q156-615.333 156-480t94.333 229.667Q344.667-156 480-156Zm0-324Z"/>
+        </symbol>
+    </svg>
+    
+    <!-- JS needs to be included at the end. -->
+    <script src="build/bundle.js"></script>
+</body>
+</html>

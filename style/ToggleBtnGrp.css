@@ -1,0 +1,66 @@
+/**
+ * HTML structure:
+ * <div class="toggleBtnGrpPlotlyWrapper">
+ *      <div class="toggleBtnGrp plotlyButton">
+ *          <button class="toggleBtnGrp-item active"></button>
+ *          <button class="toggleBtnGrp-item"></button>
+ *          ...
+ *      </div>
+ * </div>
+ * Note that 'toggleBtnGrpPlotlyWrapper' and 'toggleBtnGrp.plotlyButton' are required to add this button to plotly charts and
+ * should be omitted if no plotly chart is used.
+ * See: https://stackoverflow.com/a/74504020 
+ */
+
+.toggleBtnGrp {
+    display: inline-flex;
+    flex-direction: row;
+
+    border-radius: 2rem;
+    box-shadow: inset 0 2px 8px 0 rgba(165,170,174,0.25);
+
+    background-color: rgba(0, 0, 0, 0.8);
+    transition: all 500ms ease;
+}
+
+.toggleBtnGrp-item {
+    margin: 0.25rem;
+    padding: 0.2rem;
+    border-radius: 2rem;
+    border: 0px solid transparent; /* remove button border */
+    
+    color: white;
+    background-color: transparent; /* show box color */
+    
+    transition: all 0.5s ease;
+    cursor: pointer;
+}
+
+.toggleBtnGrp-item.active {
+    background-image: linear-gradient(
+        90deg,
+        rgb(167, 173, 78) 0%,
+        rgb(98, 173, 78) 35%,
+        rgb(95, 211, 110) 100%
+    );
+    transition: all .5s ease-in;
+}
+
+/* ///////////////////////////////////////////////////////////////////
+Plotly.js support
+/////////////////////////////////////////////////////////////////// */
+
+/** border-radius needs to be the same as 'plotlyChart.openBottom' */
+.toggleBtnGrpPlotlyWrapper {
+    background-color: rgb(244, 244, 244);
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    border-bottom-left-radius: 4.4rem;
+    border-bottom-right-radius: 4.4rem;
+}
+
+/** Specifies the padding of 'toggleBtnGrpPlotlyWrapper'. */
+.toggleBtnGrp.plotlyButton {
+    margin-left: 3.5rem; /* This margin has to function as padding of 'toggleBtnGrpPlotlyWrapper', because setting padding their causes issues for plotly. */
+    margin-bottom: 1rem;
+}
