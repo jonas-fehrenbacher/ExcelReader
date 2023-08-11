@@ -54,7 +54,7 @@ namespace app.userlist
             }
 
             // [2] Set x-axis
-            let x: number[] = jsonFormats[0].pcNumbers; // TODO: maybe do not use this global here...
+            let x: number[] = PCNumbers; // TODO: maybe do not use this global here...
 
             // [3] Set chart data
             let y: number[] = [];

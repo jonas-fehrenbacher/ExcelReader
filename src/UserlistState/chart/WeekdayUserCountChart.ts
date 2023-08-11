@@ -12,7 +12,7 @@ namespace app.userlist
             this.#chartInfo          = chartInfo;
             this.#chart              = new Chart([ 
                 [
-                    { label: "Ø Tag", id: Chart.Data.AvgDay }, 
+                    { label: "Ø Aktiver Tag", id: Chart.Data.AvgDay }, 
                     { label: "Summe", id: Chart.Data.Sum },
                 ]
                 // add pie, bar chart
@@ -37,11 +37,11 @@ namespace app.userlist
             {
                 case Chart.Data.Sum: 
                     title = "Wie viele Kunden am PC waren."; 
-                    for (const it of this.#userlistStorageRef.getWeekdayUserCount()) y[it.weekday - 1] = it.count; // sunday=0, ..
+                    for (const it of this.#userlistStorageRef.getWeekdayUserCount()) y[it.weekday - 1] = it.userCount; // sunday=0, ..
                     break;
                 case Chart.Data.AvgDay: 
                     title = "Wie viele Kunden durchschnittlich am PC <br>waren (pro Tag)."; 
-                    for (const it of this.#userlistStorageRef.getWeekdayUserCount()) y[it.weekday - 1] = it.count / this.#userlistStorageRef.getCount().day; // sunday=0, ..
+                    for (const it of this.#userlistStorageRef.getWeekdayUserCount()) y[it.weekday - 1] = it.userCount / it.dayCount; // sunday=0, ..
                     break;
                 case Chart.Data.AvgWeek: break;
                 case Chart.Data.AvgMonth: break;

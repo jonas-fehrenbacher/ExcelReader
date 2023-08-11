@@ -41,19 +41,21 @@ namespace app.userlist
                 return;
             }
 
-            // I expect every 'UserdataTable' to use the same json format.
-            let sellableItems: number[] = jsonFormats[0].sellableItems;
-            let colors: string[]        = jsonFormats[0].salesCountChart.colors;
-            let dataIndices: number[]   = jsonFormats[0].salesCountChart.sellableItemsIndices;
-            let allLabels: string[]     = jsonFormats[0].labels;
+            // ERROR: 'SellableItems' has "special coffee / cocoa" & "softdrink / juices" seperated.
 
-            // [1] Set labels
-            let labels: string[] = [];
-            for (const i of dataIndices) {
-                labels.push(allLabels[ sellableItems[i] ]);
+            // [1] Set Colors
+            let colors: string[] = [];
+            for (const sellableItem of SellableItems) {
+                colors.push(getFieldColor(sellableItem));
             }
 
-            // [2] Set values
+            // [2] Set labels
+            let labels: string[] = [];
+            for (const sellableItem of SellableItems) {
+                labels.push(getFieldLabel(sellableItem));
+            }
+
+            // [3] Set values
             let datatype: Chart.Data = this.#chart.getDropdownMenus()[0].getSelectedItemID();
             let title: string        = "";
             let values: number[]     = [];
@@ -61,26 +63,26 @@ namespace app.userlist
             {
                 case Chart.Data.Sum: 
                     title = "Die Summe aller Verkäufe."; 
-                    for (const i of dataIndices) values.push(this.#userlistStorageRef.getSellCounts()[i].value); 
+                    for (const sellCount of this.#userlistStorageRef.getSellCounts()) values.push(sellCount.sum.value); 
                     break;
                 case Chart.Data.AvgDay: 
                     title = "Durchschnittliche Anzahl der Verkäufe <br>(pro Tag)."; 
-                    for (const i of dataIndices) values.push(this.#userlistStorageRef.getSellCounts()[i].value / this.#userlistStorageRef.getCount().day); 
+                    for (const sellCount of this.#userlistStorageRef.getSellCounts()) values.push(sellCount.sum.value / this.#userlistStorageRef.getCount().day); 
                     break;
                 case Chart.Data.AvgWeek: break;
                 case Chart.Data.AvgMonth: break;
-                case Chart.Data.AvgCustomer: // per sold item: avg(this.#userlistStorageRef.getSellCounts()[i]))
+                case Chart.Data.AvgCustomer: // per sold item: avg(sellCount))
                     title = "Durchschnittliche Anzahl der Verkäufe <br>(pro Kunde)."; 
-                    for (const i of dataIndices) values.push(this.#userlistStorageRef.getSellCounts()[i].value / this.#userlistStorageRef.getCount().customer); 
+                    for (const sellCount of this.#userlistStorageRef.getSellCounts()) values.push(sellCount.sum.value / this.#userlistStorageRef.getCount().customer); 
                     break;
                     case Chart.Data.AvgActiveCustomer: 
                     title = "Durchschnittliche Anzahl der Verkäufe <br>(pro activer Kunde)."; 
-                    for (const i of dataIndices) values.push(avg(this.#userlistStorageRef.getSellCounts()[i])); 
+                    for (const sellCount of this.#userlistStorageRef.getSellCounts()) values.push(avg(sellCount.sum)); 
                     break;
                 default: assert(false); break;
             }
 
-            // [3] Set pie chart data
+            // [4] Set pie chart data
             let data: Plotly.Data = {
                 type: 'pie',
                 values: values,
@@ -93,7 +95,7 @@ namespace app.userlist
                 // title: { text: "Userliste - Daten", position: "top center", font: { size: 40 } }
             };
 
-            // [4] Set pie chart layout
+            // [5] Set pie chart layout
             // If 'width' and 'height' is used, then chart is not responsive!
             let layout: Partial<Plotly.Layout> = {
                 title: title,
@@ -117,7 +119,7 @@ namespace app.userlist
                 layout.height = 550; // Show chart larger on desktop screens, because its otherwise to small.
             }
             
-            // [5] Set config
+            // [6] Set config
             let modebarLegendBtn: Plotly.ModeBarButton = {
                 name: 'legend toggler',
                 title: "Legend",
@@ -135,7 +137,7 @@ namespace app.userlist
                 modeBarButtonsToRemove: []
             }
 
-            // [5] Update chart data
+            // [7] Update chart data
             chart.setData(data, layout, config);
         }
     }

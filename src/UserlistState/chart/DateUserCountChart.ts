@@ -26,7 +26,9 @@ namespace app.userlist
             // For the time series plot the data needs to be in reverse order, so that it is displayed from left to right.
             let y: number[] = [];
             for (let i = this.#userlistStorageRef.data().length-1; i >= 0; --i) {
-                y.push(this.#userlistStorageRef.data()[i].getSumRow()[jsonFormats[0].pcField]);
+                let userlist: Userlist = this.#userlistStorageRef.data()[i];
+                let pcFieldIndex: number = getFieldIndex(userlist.getJsonFormat().fields, Fields.PC);
+                y.push(userlist.getSumRow()[pcFieldIndex]);
             }
 
             // [3] Set data

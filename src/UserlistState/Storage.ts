@@ -20,8 +20,9 @@ namespace app.userlist
 
     export interface WeekdayUserCount
     {
-        count:   number;
-        weekday: Weekday;
+        userCount: number;
+        weekday:   Weekday;
+        dayCount:  number; //< for avg
     }
 
     export interface TotalPCTime
@@ -40,6 +41,12 @@ namespace app.userlist
         month:    number;
     }
 
+    export interface SellCount
+    {
+        sum:  Sum;
+        type: Fields;
+    }
+
     /**
      * Sell count chart:
      * - Sum, Ø<time>, ØCustomer, ØActiveCustomer
@@ -48,7 +55,7 @@ namespace app.userlist
      * Card count chart:
      * - Sum, Ø<time>, ØCustomer (percent)
      * Weekday user count chart:
-     * - Sum, Ø<time>
+     * - Sum, ØActiveDay
      * weekday user time chart: (TODO)
      * - Sum, Ø<time>, ØCustomer
      * total pc time: (TODO)
@@ -61,10 +68,10 @@ namespace app.userlist
     export class Storage
     {
         #htmlAlertBoxesRef:        HTMLDivElement;
-        #userlists :               Userlist[];
+        #userlists:                Userlist[];
         #count:                    Count;
 
-        #sellCounts:               Sum[]; //< Must be of type 'Sum', because I need an custom average - 'Count' is not enough. Thats because I want to count how many customers sold item x.
+        #sellCounts:               SellCount[]; //< Must be of type 'Sum', because I need an custom average - 'Count' is not enough. Thats because I want to count how many customers sold item x.
         #pcDurations:              Sum[];
         #customerWithCardCount:    number;
         #customerWithoutCardCount: number;
@@ -139,12 +146,13 @@ namespace app.userlist
             // Is calculated from all selected days 
             // (only for sellable items specified with 'jsonFormat')
             {
-                let sellableItems: number[] = this.#userlists[0].getJsonFormat().sellableItems;
-                for (let i = 0; i < sellableItems.length; ++i) {
-                    this.#sellCounts.push({ value: 0, count: 0 });
+                // [5.1] Init sell counts
+                for (let i = 0; i < SellableItems.length; ++i) {
+                    this.#sellCounts.push({ sum: {value: 0, count: 0}, type: SellableItems[i] });
                 }
                 //this.#sellCounts = Array(sellableItems.length).fill({ value: 0, count: 0 }); // Why does this not work with interface arrays (every item has the same value) - pointer?
 
+                // [5.2] Set sell counts data
                 for (const userlist of this.#userlists) 
                 {
                     // ..new day
@@ -152,31 +160,38 @@ namespace app.userlist
                     {
                         // ..new customer
                         let sumI: number = 0;
-                        for (const i of sellableItems)
+                        for (let i = 0; i < userlist.getJsonFormat().fields.length; ++i)
                         {
-                            if (customer[i] !== "") {
+                            let field: Field = userlist.getJsonFormat().fields[i];
+                            if (containsFlags(SellableItems, field.type) && customer[i] !== "") { // note that 'field.type' may contain multiple types.
                                 // ..this field is not undefined / empty
-                                this.#sellCounts[sumI].value += Number(customer[i]);
-                                ++this.#sellCounts[sumI].count; // count how many customers bought this item.
+                                for (const sellCount of this.#sellCounts) {
+                                    if (sellCount.type == field.type) {
+                                        sellCount.sum.value += Number(customer[i]);
+                                        ++sellCount.sum.count; // count how many customers bought this item.
+                                        break;
+                                    }
+                                }
                             }
                             ++sumI;
                         }
                     }
                 }
-            }
+                console.log(this.#sellCounts);
+            }            
 
             // [6] PC durations (sum & avg)
             {
-                let fromFieldIndex: number  = this.#userlists[0].getJsonFormat().dateFields[0];
-                let untilFieldIndex: number = this.#userlists[0].getJsonFormat().dateFields[1];
-                let pcFieldIndex: number    = this.#userlists[0].getJsonFormat().pcField;
-                let pcNumbers: number[]     = this.#userlists[0].getJsonFormat().pcNumbers;
                 let pcTimeList: PCTime[]    = [];
 
                 for (const userlist of this.#userlists) 
                 {
-                    // [6.1] Store all pcs and their duration
-                    
+                    // [6.1] Get format information
+                    let fromFieldIndex: number  = getFieldIndex(userlist.getJsonFormat().fields, Fields.From);
+                    let untilFieldIndex: number = getFieldIndex(userlist.getJsonFormat().fields, Fields.Until);
+                    let pcFieldIndex: number    = getFieldIndex(userlist.getJsonFormat().fields, Fields.PC);
+
+                    // [6.2] Store all pcs and their duration
                     for (const row of userlist.getRows())
                     {
                         let duration: number = 0; // ms
@@ -188,8 +203,8 @@ namespace app.userlist
                     }
                 }
 
-                // [6.2] Calculate 'Sum'
-                for (const pcNumber of pcNumbers) {
+                // [6.3] Calculate 'Sum'
+                for (const pcNumber of PCNumbers) {
                     let sum: Sum = { value: 0, count: 0 };
                     for (const pcTime of pcTimeList)
                     {
@@ -204,10 +219,11 @@ namespace app.userlist
 
             // [7] Calculate card count
             {
-                let cardField: number = this.#userlists[0].getJsonFormat().cardField;
-                for (const userdataTable of this.#userlists)
+                for (const userlist of this.#userlists)
                 {
-                    for (const row of userdataTable.getRows()) {
+                    let cardField: number = getFieldIndex(userlist.getJsonFormat().fields, Fields.Card);
+
+                    for (const row of userlist.getRows()) {
                         if (row[cardField] === "") {
                             ++this.#customerWithoutCardCount;
                         }
@@ -223,7 +239,7 @@ namespace app.userlist
                 // [6.1] Default initialize
                 if (this.#weekdayUserCount.length == 0) {
                     for (let weekday = Weekday.Monday; weekday <= Weekday.Saturday; ++weekday) {
-                        this.#weekdayUserCount.push({ count: 0, weekday: weekday });
+                        this.#weekdayUserCount.push({ userCount: 0, weekday: weekday, dayCount: 0 });
                     }
                 }
 
@@ -233,8 +249,8 @@ namespace app.userlist
                     for (const it of this.#weekdayUserCount)
                     {
                         if (it.weekday == userlist.getDate().getDay()) {
-                            // userlist.getRows().length
-                            it.count += userlist.getSumRow()[jsonFormats[0].pcField];
+                            it.userCount += userlist.getRows().length; // userlist.getSumRow()[jsonFormats[0].pcField];
+                            ++it.dayCount;
                         }
                     }
                 }
@@ -279,8 +295,8 @@ namespace app.userlist
             return this.#userlists;
         }
 
-        /** @return sellCounts Corresponds with 'userdataJsonFormats::sellableItems'. */
-        getSellCounts(): Sum[]
+        /** @return sellCounts includes everything from 'userlist.SellableItems'. */
+        getSellCounts(): SellCount[]
         {
             return this.#sellCounts;
         }

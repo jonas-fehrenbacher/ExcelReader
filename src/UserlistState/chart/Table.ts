@@ -23,7 +23,10 @@ namespace app.userlist
         display(userlistStorage: Storage): void
         {
             // I expect each 'UserdataTable' to have the same excel / json format.
-            this.#labels = userlistStorage.data()[0].getJsonFormat().labels;
+            this.#labels = [];
+            for (const field of userlistStorage.data()[0].getJsonFormat().fields) {
+                this.#labels.push(getFieldLabel(field.type));
+            }
 
             // [1] Set table caption
             this.#htmlData = "<caption>Userlisten</caption>";
@@ -36,18 +39,18 @@ namespace app.userlist
             this.#htmlData += "</tr></thead>";
 
             // [2] Create table body
-            for (const userdataTable of userlistStorage.data())
+            for (const userlist of userlistStorage.data())
             {
                 this.#htmlData += "<tbody>";
 
                 // [2.1] Add date
                 this.#htmlData += '<tr >';
-                let weekday: string = userdataTable.getDate().toLocaleDateString("de", { weekday: 'long' });
-                this.#htmlData += ('<td class="table-dateCell" colspan="' + this.#labels.length + '">' + userdataTable.getDate().toLocaleString() + " (" + weekday + ")</td>");
+                let weekday: string = userlist.getDate().toLocaleDateString("de", { weekday: 'long' });
+                this.#htmlData += ('<td class="table-dateCell" colspan="' + this.#labels.length + '">' + userlist.getDate().toLocaleString() + " (" + weekday + ")</td>");
                 this.#htmlData += "</tr>";
 
                 // [2.2] Add user data
-                for (const userdata of userdataTable.getRows())
+                for (const userdata of userlist.getRows())
                 {
                     this.#addRow(userdata);
                 }
@@ -55,7 +58,7 @@ namespace app.userlist
                 // [2.3] Add sum
                 // Here the sum of each specific column is displayed.
                 // Note that using a css class has not enough priority, thats why I'm using a id.
-                this.#addRow(userdataTable.getSumRow(), "table-summaryRow");
+                this.#addRow(userlist.getSumRow(), "table-summaryRow");
 
                 this.#htmlData += "</tbody>";
             }

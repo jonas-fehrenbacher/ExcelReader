@@ -12,6 +12,19 @@ namespace app
         this.count = this.count || 0;
         return this.count++;
     }
+
+    export function containsFlags(flagContainer: number[], flags: number): boolean
+    {
+        let foundFlags: number = 0;
+        for (const flag of flagContainer)
+            if ((flag & flags) == flag) {
+                foundFlags |= flag;
+            }
+        if (foundFlags == flags) {
+            return true;
+        }
+        return false;
+    }
     
     /** Leading and trailing spaces are allowed. */
     export function isNumeric(n: any): boolean

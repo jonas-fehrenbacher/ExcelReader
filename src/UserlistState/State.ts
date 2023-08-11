@@ -13,10 +13,10 @@ namespace app.userlist
     {
         #userlistStorage:        Storage;
         #table:                  Table;
+        #tableDragBar:           TableDragBar;
         #salesCountChart:        SalesCountChart;
         #pcTimeChart:            PCTimeChart;
         #cardCountChart:         CardCountChart;
-        #tableDragBar:           TableDragBar;
         #weekdayUserCountChart:  WeekdayUserCountChart;
         #dateUserCountChart:     DateUserCountChart
         #htmlAlertBoxesRef:      HTMLDivElement;
@@ -49,10 +49,10 @@ namespace app.userlist
             this.#fileUploadField.reset();
             this.#userlistStorage.reset();
             this.#table.reset();      
+            this.#tableDragBar.reset();
             this.#salesCountChart.reset();       
             this.#pcTimeChart.reset();
             this.#cardCountChart.reset();
-            this.#tableDragBar.reset();
             this.#weekdayUserCountChart.reset();
             this.#dateUserCountChart.reset();
         }
@@ -75,11 +75,11 @@ namespace app.userlist
             this.#fileUploadField.display();
             this.#successAlertBox.display();
             this.#table.display(this.#userlistStorage);
+            this.#tableDragBar.display();
             this.#dateUserCountChart.display();
             this.#salesCountChart.display();
             this.#pcTimeChart.display();
             this.#cardCountChart.display();
-            this.#tableDragBar.display();
             this.#weekdayUserCountChart.display();
 
             return true;

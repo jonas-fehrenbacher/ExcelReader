@@ -63,10 +63,16 @@ namespace app.userlist
                 let row: any = jsonData[i];
 
                 // [4.1] Filter out empty rows
+                // Note that the "von" column after the last userlist entry has sometimes only a white space - rest is empty. If thats 
+                // the case, then discard this row. Otherwise there would be a small empty table row at the end. 
                 let isEmpty = true;
-                for (const fieldName of this.#jsonFormat.fieldNames) 
+                for (const field of this.#jsonFormat.fields) 
                 {
-                    if (row[fieldName] !== undefined && row[fieldName] !== "") {
+                    let value: any = row[field.name];
+                    if (typeof value === "string") {
+                        value = value.replace(/\s/g, ''); // remove all whitespaces - a value with only whitespaces is a empty value.
+                    }
+                    if (value !== undefined && value !== "") {
                         isEmpty = false;
                         continue;
                     }
@@ -95,17 +101,15 @@ namespace app.userlist
         {
             // [1] Get row data
             let rowData: any[] = [];
-            for (const fieldName of jsonFormat.fieldNames) 
+            for (const field of jsonFormat.fields) 
             {
                 // [1.1] Use empty string for undefined fields
-                let data: any = (row[fieldName] === undefined) ? "" : row[fieldName];
+                let data: any = (row[field.name] === undefined) ? "" : row[field.name];
 
                 // [1.2] Check if fieldname is of date type
                 let isDateType: boolean = false;
-                for (const dateFieldIndex of jsonFormat.dateFields) {
-                    if (fieldName == jsonFormat.fieldNames[dateFieldIndex]) {
-                        isDateType = true;
-                    }
+                if (field.type == Fields.From || field.type == Fields.Until) {
+                    isDateType = true;
                 }
 
                 // [1.2] Convert excel date to js date
@@ -142,7 +146,7 @@ namespace app.userlist
             return this.#date;
         }
 
-        getJsonFormat(): any
+        getJsonFormat(): JsonFormat
         {
             return this.#jsonFormat;
         }
